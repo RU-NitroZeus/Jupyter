@@ -1,0 +1,33 @@
+Ошибка возникает потому, что параметр `min_df` не принимается HashingVectorizer, а принимается TfidfVectorizer и CountVectorizer для фильтрации редких слов в корпусе.
+
+HashingVectorizer работает по-другому. Он хеширует токены в признаки и может использоваться в случаях, когда нужна быстрая и эффективная векторизация больших объемов текстовых данных.
+
+Вместо использования параметра `min_df` с HashingVectorizer, можно установить количество признаков с помощью параметра `n_features`. 
+
+Например, вот как можно использовать HashingVectorizer с установленным значением `n_features` равным 2000:
+
+```python
+
+from sklearn.feature_extraction.text import HashingVectorizer
+
+import pandas as pd
+
+# Создаем экземпляр HashingVectorizer
+
+vectorizer = HashingVectorizer(n_features=2000, norm=None, alternate_sign=False)
+
+# Применяем HashingVectorizer к текстовому корпусу
+
+X = vectorizer.transform(tk['clear_text'])
+
+# Создаем DataFrame из результата и создаем имена признаков для каждой колонки
+
+df = pd.DataFrame(X.toarray(), columns=[f'feature_{i}' for i in range(2000)])
+
+# Выводим первые 5 строк DataFrame
+
+df.head()
+
+```
+
+Таким образом, мы можем управлять количеством признаков, подходящих для конкретных целей и объемов данных.
